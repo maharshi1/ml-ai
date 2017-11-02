@@ -93,3 +93,32 @@ plt.show()
 # If dJ/dW is negative then the cost function is going down.
 # When going down, stopping at lowest min. is called  Gradient Descent.
 
+class NeuralNetworkOptimized(NeuralNetwork):
+    def costFunction(self, x, y):
+        #Compute cost for given x,y, use weights already stored in class.
+        self.yHat = self.forward(x)
+        J = 0.5*sum((y-self.yHat)**2)
+        return J
+
+    def sigmoidPrime(self, z):
+        # Derivative of Sigmoid Function
+        return np.exp(-z) / ((1+np.exp(-z))**2)
+
+    def costFunctionPrime(self, x, y):
+        # Compute derivative with respect to W1 and W2
+        self.yHat = self.forward(x)
+
+        delta3 = np.multiply(-(y-self.yHat), self.sigmoidPrime(self.z3))
+        dJdW2 = np.dot(self.a2.T, delta3)
+
+        delta2 = np.dot(delta3, self.W2.T) * self.sigmoidPrime(self.z2)
+        dJdW1 = np.dot(x.T, delta2)
+
+        return dJdW1, dJdW2
+
+NN = NeuralNetworkOptimized()
+import pdb;pdb.set_trace()
+cost1 = NN.costFunction(x,y)
+dJdW1, dJdW2 = NN.costFunctionPrime(x,y)
+print dJdW1 
+print dJdW2
