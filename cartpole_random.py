@@ -13,7 +13,7 @@ def run_episode(env, parameters):
             break
     return totalreward
 
-def train(submit):
+def train():
     env = gym.make('CartPole-v0')
 
     counter = 0
@@ -29,17 +29,12 @@ def train(submit):
             if reward == 200:
                 break
 
-    if submit:
-        for _ in xrange(100):
-            run_episode(env,bestparams)
-        env.monitor.close()
-
     return counter
 
 # create graphs
 results = []
 for _ in xrange(1000):
-    results.append(train(submit=False))
+    results.append(train())
 
 plt.hist(results,50,normed=1, facecolor='g', alpha=0.75)
 plt.xlabel('Episodes required to reach 200')
