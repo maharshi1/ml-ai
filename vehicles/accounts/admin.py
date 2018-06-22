@@ -6,7 +6,9 @@ User = get_user_model()
 
 class UserAdmin(admin.ModelAdmin):
     search_fields = ['phone_number']
+
     class Meta:
         model = User
+
 
 admin.site.register(User, UserAdmin)

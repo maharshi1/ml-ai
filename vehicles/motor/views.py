@@ -1,11 +1,11 @@
-from django.shortcuts import render
-from django.http import HttpResponse
-from motor.models import Motor
 from motor.forms import MotorForm
+from django.views.generic import CreateView
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
-def home(request):
-    motor = MotorForm(request.POST or None)
-    context = {
-        'motor': motor
-    }
-    return render(request, 'home.html', context)
+
+@method_decorator(login_required, name='dispatch')
+class HomeView(CreateView):
+    form_class = MotorForm
+    template_name = 'home.html'
+    success_url = '/home'

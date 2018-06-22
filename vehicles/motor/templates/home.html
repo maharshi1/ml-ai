@@ -14,8 +14,15 @@
   <div class="container">
     <div class="row">
       <div class="col-md-12">
+        <p class="text-right">
+          <em>{{ request.user.phone_number }}</em>
+          &nbsp;
+          <a href="/accounts/logout">Logout</a>
+        </p>
+      </div>
+      <div class="col-md-12">
         <form action="" method="post" enctype="multipart/form-data">
-          {% csrf_token %} {{ motor }}
+          {% csrf_token %} {{ form }}
           <br>
           <input class="form-control" type="submit" value="Save">
         </form>

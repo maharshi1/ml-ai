@@ -16,4 +16,3 @@ if __name__ == "__main__":
 
 # >>> django.__version__
 # '2.0.6'
-

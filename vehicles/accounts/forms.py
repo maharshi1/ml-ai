@@ -25,7 +25,6 @@ class UserRegistration(forms.ModelForm):
         label='Confirm Password'
     )
 
-
     class Meta:
         model = User
         fields = ['phone_number', 'password']
@@ -33,29 +32,31 @@ class UserRegistration(forms.ModelForm):
     def clean(self):
         clean_data = super().clean()
         if not clean_data.get('phone_number', False):
-            raise forms.ValidationError('This field is required.', code='invalid')
+            raise forms.ValidationError(
+                'This field is required.', code='invalid')
         elif len(clean_data['phone_number']) != 10:
-            raise forms.ValidationError('Phone number should be excatly 10 digits', code='invalid')
+            raise forms.ValidationError(
+                'Phone number should be excatly 10 digits', code='invalid')
 
         if not clean_data.get('password', False):
-            raise forms.ValidationError('Password field is required.', code='invalid')
-        elif len(clean_data['password']) != 8 :
+            raise forms.ValidationError(
+                'Password field is required.', code='invalid')
+        elif len(clean_data['password']) != 8:
             raise forms.ValidationError(
                 'This password is too short. It must contain at least 8 characters.',
                 code='invalid'
             )
-        
+
         if clean_data['password'] != clean_data.get('confirm_password', False):
             raise forms.ValidationError('Passwords don\'t match')
         return clean_data
-    
+
     def save(self, commit=True):
         clean_data = super().clean()
         user = super(UserRegistration, self).save(commit=False)
         user.set_password(clean_data['password'])
         if commit:
             user.save()
-        print('save user')
         return user
 
 

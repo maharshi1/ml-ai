@@ -1,29 +1,56 @@
-from django.shortcuts import render
-from accounts.models import User
 from accounts.forms import (
     UserRegistration,
     UserLogin
 )
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login
+from django.views.generic import (
+    CreateView,
+    FormView
+)
+from django.shortcuts import redirect
+from django.utils.http import is_safe_url
+from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
-def login(request):
-    login_form = UserLogin(request.POST or None)
-    context = {
-        'login_form': login_form
-    }
-    if login_form.is_valid():
-        phone_number = login_form.cleaned_data.get('phone_number')
-        password = login_form.cleaned_data.get('password')
-        FIX LOGIN
-        user = authenticate(phone_number, password)
-    return render(request, 'login.html', context)
 
-def register(request):
-    register_form = UserRegistration(request.POST or None)
-    context = {
-        'register_form': register_form
-    }
-    if register_form.is_valid():
-        register_form.save()
-        return render(request, 'login.html', context)
-    return render(request, 'register.html', context)
+class RegisterView(CreateView):
+    form_class = UserRegistration
+    template_name = 'register.html'
+    success_url = '/accounts/login'
+
+    def dispatch(self, *args, **kwargs):
+        if args[0].user.is_authenticated:
+            return redirect('/home')
+        return super().dispatch(*args, **kwargs)
+
+
+class LoginView(FormView):
+    form_class = UserLogin
+    template_name = 'login.html'
+    success_url = '/home'
+
+    def dispatch(self, *args, **kwargs):
+        if args[0].user.is_authenticated:
+            return redirect('/home')
+        return super().dispatch(*args, **kwargs)
+
+    def form_valid(self, form):
+        redirect_path = self.request.GET.get('next') \
+            or self.request.POST.get('next') or None
+        username = form.cleaned_data.get('phone_number')
+        password = form.cleaned_data.get('password')
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(self.request, user)
+            if is_safe_url(redirect_path, self.request.get_host()):
+                return redirect(redirect_path)
+            else:
+                return redirect('/home')
+        return super(LoginView, self).form_invalid(form)
+
+
+@login_required(login_url='accounts/login/')
+def logout_user(request):
+    logout(request)
+    return redirect('/accounts/login/')
