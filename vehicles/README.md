@@ -14,4 +14,4 @@ the previous url. The redirection after login should not be hard-coded.
 
 >_Done with,_
 >**Python version :  3.6.5**
->**Django veresion : 2.0.6**
+>**Django version : 2.0.6**
