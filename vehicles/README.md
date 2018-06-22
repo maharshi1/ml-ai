@@ -11,3 +11,7 @@ and Password in the Accounts App.
 4. Finally, when the user tries to access the ‘home/‘ url, it should check whether the user is
 logged in or not. If not, redirect to the login page. After authentication, it should redirect to
 the previous url. The redirection after login should not be hard-coded.
+
+>_Done with,_
+>**Python version :  3.6.5**
+>**Django veresion : 2.0.6**
