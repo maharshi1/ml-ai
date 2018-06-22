@@ -1,5 +1,6 @@
 from django import forms
 from accounts.models import User
+import re
 
 
 class UserRegistration(forms.ModelForm):
@@ -78,4 +79,7 @@ class UserLogin(forms.Form):
 
     def clean(self):
         clean_data = super().clean()
+        if not re.match('^[0-9]+$', clean_data.get('phone_number')) or len(clean_data.get('phone_number')) != 10:
+            raise forms.ValidationError(
+                'Phone number is of wrong format or length.')
         return clean_data

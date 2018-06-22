@@ -1,8 +1,9 @@
 from django.db import models
+from accounts.models import User
 
 
 class Motor(models.Model):
-    vehical_number = models.CharField(
+    vehicle_number = models.CharField(
         max_length=45,
         null=False
     )
@@ -15,6 +16,10 @@ class Motor(models.Model):
         choices=POLICY,
         null=False
     )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE
+    )
 
     def __str__(self):
-        return self.vehical_number
+        return self.vehicle_number

@@ -9,3 +9,13 @@ class HomeView(CreateView):
     form_class = MotorForm
     template_name = 'home.html'
     success_url = '/home'
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(HomeView, self).form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        ctx = super(HomeView, self).get_context_data(**kwargs)
+        ctx['vehicles'] = self.form_class.Meta.model.objects.filter(
+            user=self.request.user)
+        return ctx

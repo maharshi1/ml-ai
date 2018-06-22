@@ -4,12 +4,12 @@ import re
 
 
 class MotorForm(forms.ModelForm):
-    vehical_number = forms.CharField(
+    vehicle_number = forms.CharField(
         widget=forms.TextInput(
             attrs={'class': 'form-control', 'placeholder': 'e.g. MH03CB8906'}),
         required=True,
         max_length=45,
-        label='Vehical Number'
+        label='Vehicle Number'
     )
     policy = forms.ChoiceField(
         widget=forms.Select(attrs={'class': 'form-control'}),
@@ -20,19 +20,19 @@ class MotorForm(forms.ModelForm):
 
     class Meta:
         model = Motor
-        fields = ['vehical_number', 'policy']
+        fields = ['vehicle_number', 'policy']
 
-    def clean_vehical_number(self):
+    def clean_vehicle_number(self):
         clean_data = super().clean()
         match = re.match(
             '^(MH){1}[0-9]{2}[A-Z]{2}[0-9]{4}',
-            clean_data['vehical_number']
+            clean_data['vehicle_number']
         )
         if not match:
             raise forms.ValidationError(
-                'Vehical Number Incorrect', code='invalid')
+                'Vehicle Number Incorrect', code='invalid')
         else:
-            return clean_data['vehical_number']
+            return clean_data['vehicle_number']
 
     def save(self, commit=True):
         motor = super(MotorForm, self).save(commit=False)
