@@ -29,6 +29,7 @@ class UserManager(BaseUserManager):
         )
         return user
 
+
 class User(AbstractBaseUser):
     phone_number = models.CharField(
         unique=True,

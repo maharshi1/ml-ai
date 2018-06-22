@@ -7,19 +7,22 @@ class UserRegistration(forms.ModelForm):
         widget=forms.TextInput(
             attrs={'class': 'form-control', 'placeholder': 'e.g. 9769798529'}
         ),
-        required=True
+        required=True,
+        label='Phone Number'
     )
     password = forms.CharField(
         widget=forms.PasswordInput(
             attrs={'class': 'form-control'}
         ),
-        required=True
+        required=True,
+        label='Password'
     )
     confirm_password = forms.CharField(
         widget=forms.PasswordInput(
             attrs={'class': 'form-control'}
         ),
-        required=True
+        required=True,
+        label='Confirm Password'
     )
 
 
@@ -27,7 +30,7 @@ class UserRegistration(forms.ModelForm):
         model = User
         fields = ['phone_number', 'password']
 
-    def clean(request):
+    def clean(self):
         clean_data = super().clean()
         if not clean_data.get('phone_number', False):
             raise forms.ValidationError('This field is required.', code='invalid')
@@ -54,3 +57,24 @@ class UserRegistration(forms.ModelForm):
             user.save()
         print('save user')
         return user
+
+
+class UserLogin(forms.Form):
+    phone_number = forms.CharField(
+        widget=forms.TextInput(
+            attrs={'class': 'form-control', 'placeholder': 'e.g. 9769798529'}
+        ),
+        required=True,
+        label='Phone Number'
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={'class': 'form-control'}
+        ),
+        required=True,
+        label='Password'
+    )
+
+    def clean(self):
+        clean_data = super().clean()
+        return clean_data
